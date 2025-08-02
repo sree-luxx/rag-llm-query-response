@@ -1,7 +1,7 @@
 import requests
 import json
 
-url = "http://127.0.0.1:8000/api/v1/hackrx/run"
+url = "https://llm-app-dpye.onrender.com/hackrx/run"  # Updated endpoint
 headers = {
     "Authorization": "Bearer 87436cd7e9ec09c6ae1c66eb55aa5da937d1ec6c22a032731eb773c9a9727777",
     "Content-Type": "application/json",
@@ -16,7 +16,7 @@ data = {
 }
 
 try:
-    res = requests.post(url, headers=headers, json=data, timeout=30)  # Hackathon rule
+    res = requests.post(url, headers=headers, json=data, timeout=30)
     res.raise_for_status()
     print(json.dumps(res.json(), indent=2))
 except requests.exceptions.RequestException as e:

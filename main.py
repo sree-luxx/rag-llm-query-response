@@ -5,8 +5,7 @@ from app.pipeline import run_pipeline
 from fastapi.openapi.utils import get_openapi
 import logging
 
-# Setup logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
@@ -17,7 +16,7 @@ class RequestData(BaseModel):
     documents: str
     questions: list[str]
 
-@app.post("/api/v1/hackrx/run")
+@app.post("/hackrx/run")
 async def process_query(data: RequestData, Authorization: Optional[str] = Header(None)):
     logger.info(f"Incoming request: {data.dict()}")
     logger.info(f"Authorization header: {Authorization}")
@@ -32,7 +31,12 @@ async def process_query(data: RequestData, Authorization: Optional[str] = Header
         return result
     except Exception as e:
         logger.error(f"API error: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@app.get("/health")
+async def health_check():
+    logger.info("Health check accessed")
+    return {"status": "healthy"}
 
 def custom_openapi():
     if app.openapi_schema:
